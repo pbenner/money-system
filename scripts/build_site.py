@@ -16,6 +16,8 @@ def parse_args() -> argparse.Namespace:
 
 
 def build_page(figures_html: dict[str, str]) -> str:
+    params = ModelConfig()
+    initial = params.resolve_initial()
     return f"""<!doctype html>
 <html lang=\"en\">
   <head>
@@ -245,6 +247,27 @@ Identity check: NonGov NFA + Public NFP ≈ 0</code></pre>
           or numerical drift.
         </p>
         <div class=\"figure\">{figures_html["accounting_check"]}</div>
+      </section>
+
+      <section>
+        <h2>Initial Conditions</h2>
+        <p>The model starts from the following balance sheet levels (defaults):</p>
+        <pre><code>{initial}</code></pre>
+      </section>
+
+      <section>
+        <h2>Model Parameters</h2>
+        <p>Default parameter values used for the simulation:</p>
+        <pre><code>steps = {params.steps}
+dt_months = {params.dt_months}
+gov_spending = {params.gov_spending}
+tax_rate = {params.tax_rate}
+loan_growth = {params.loan_growth}
+deposit_rate = {params.deposit_rate}
+loan_rate = {params.loan_rate}
+reserve_rate = {params.reserve_rate}
+bond_rate = {params.bond_rate}
+tga_target = {params.tga_target}</code></pre>
       </section>
     </main>
     <footer>
