@@ -131,7 +131,10 @@ Equity residual:       Equity = Assets - Liabilities</code></pre>
         <h2>Money and Debt Dynamics</h2>
         <p>
           Money (M1) is defined as private deposits plus currency. Private debt corresponds to bank loans.
-          Loan creation expands both deposits and loans, while repayment contracts them.
+          Loan creation expands both deposits and loans, while repayment contracts them. In accounting
+          terms, loans are a liability of the private sector and an asset of the banking sector, while
+          deposits are a liability of the banking sector and an asset of the private sector. For the
+          private sector this is the reverse view: deposits are assets, loans are liabilities.
         </p>
         <div class=\"figure\">{figures_html["money_debt"]}</div>
       </section>
