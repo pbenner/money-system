@@ -16,6 +16,8 @@ from .flows import (
     tx_interest_on_reserves,
     tx_loan_creation,
     tx_loan_repayment,
+    tx_private_loan_creation,
+    tx_private_loan_repayment,
     tx_taxes,
 )
 from .ledger import Ledger, build_default_ledger
@@ -85,11 +87,18 @@ class MoneySystemModel:
         loans = _get_balance(balances, "Private", "Loans")
         return self.config.loan_growth * loans
 
+    def _resolve_private_loan_change(self, step: int, balances: Dict[str, float]) -> float:
+        if self.config.private_loan_growth_fn is not None:
+            return float(self.config.private_loan_growth_fn(step, balances))
+        loans = _get_balance(balances, "Private", "PrivateLoansAsset")
+        return self.config.private_loan_growth * loans
+
     def step(self, step: int) -> Tuple[Dict[str, float], Dict[str, float], Dict[str, float]]:
         balances = self.snapshot()
 
         loans = _get_balance(balances, "Private", "Loans")
         deposits = _get_balance(balances, "Private", "Deposits")
+        private_loans = _get_balance(balances, "Private", "PrivateLoansAsset")
         bonds = _get_balance(balances, "Private", "GovBonds")
         reserves = _get_balance(balances, "Banks", "Reserves")
 
@@ -101,6 +110,7 @@ class MoneySystemModel:
             "interest_on_reserves": self.config.reserve_rate * reserves,
             "interest_on_bonds": self.config.bond_rate * bonds,
         }
+        flows["private_loan_change"] = self._resolve_private_loan_change(step, balances)
         flows["taxes"] = self._resolve_tax(step, balances, flows)
 
         txs = []
@@ -109,6 +119,12 @@ class MoneySystemModel:
         else:
             repayment = min(-flows["loan_change"], deposits)
             txs.append(tx_loan_repayment(repayment))
+
+        if flows["private_loan_change"] >= 0:
+            txs.append(tx_private_loan_creation(flows["private_loan_change"]))
+        else:
+            repayment = min(-flows["private_loan_change"], private_loans)
+            txs.append(tx_private_loan_repayment(repayment))
 
         txs.extend(
             [
@@ -132,10 +148,12 @@ class MoneySystemModel:
         else:
             flows["bond_issuance"] = 0.0
 
-        self.ledger.recompute_equity()
+        equity_adjustments = self.ledger.recompute_equity()
 
         stocks = self.snapshot()
         metrics = _compute_metrics(stocks, self.ledger)
+        for sector, delta in equity_adjustments.items():
+            flows[f"equity_adjustment_{sector}"] = delta
 
         self._stock_history.append(stocks)
         self._flow_history.append(flows)

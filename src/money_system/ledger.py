@@ -97,10 +97,15 @@ class Ledger:
             self.sectors[p.sector].apply(p.account, p.amount)
         self.transactions.append(tx)
 
-    def recompute_equity(self) -> None:
+    def recompute_equity(self) -> Dict[str, float]:
+        adjustments: Dict[str, float] = {}
         for sector in self.sectors.values():
+            before = sector.equity_total()
             sector.recompute_equity()
             sector.assert_balanced()
+            after = sector.equity_total()
+            adjustments[sector.name] = after - before
+        return adjustments
 
     def snapshot(self) -> Dict[str, float]:
         data: Dict[str, float] = {}
@@ -125,7 +130,10 @@ def default_chart(initial: Dict[str, Dict[str, float]]) -> Dict[str, SectorLedge
             {
                 "Deposits": "asset",
                 "Loans": "liability",
+                "PrivateLoansAsset": "asset",
+                "PrivateLoansLiability": "liability",
                 "GovBonds": "asset",
+                "BankDebt": "asset",
                 "Currency": "asset",
                 "NetWorth": "equity",
             },
@@ -136,6 +144,7 @@ def default_chart(initial: Dict[str, Dict[str, float]]) -> Dict[str, SectorLedge
                 "Loans": "asset",
                 "Reserves": "asset",
                 "Deposits": "liability",
+                "BankDebt": "liability",
                 "BankEquity": "equity",
             },
         ),

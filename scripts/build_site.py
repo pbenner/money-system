@@ -234,6 +234,15 @@ CentralBank:  Reserves  +G  (liability)
 CentralBank:  TGA       -G  (liability)
 Government:   TGA       -G  (asset)</code></pre>
         <p>
+          Interpretation by sector:
+        </p>
+        <ul>
+          <li><strong>Central Bank:</strong> reserves (liability) increase and the TGA (liability) decreases by the same amount. Total CB liabilities are unchanged, so CB equity does not change.</li>
+          <li><strong>Treasury/Government:</strong> the TGA asset falls, reducing government net worth (equity). Government liabilities (bonds) are unchanged in this transaction.</li>
+          <li><strong>Banks:</strong> reserves (asset) rise and deposits (liability) rise by the same amount. Bank equity is unchanged.</li>
+          <li><strong>Private sector:</strong> deposits (asset) rise, so private equity increases.</li>
+        </ul>
+        <p>
           The model also computes a sectoral identity check to verify that the non-government
           sector's net financial assets equal the negative of the public sector's net position.
         </p>
@@ -248,6 +257,26 @@ Identity check: NonGov NFA + Public NFP ≈ 0</code></pre>
           Government spending injects deposits into the private sector, while taxes withdraw them.
           The model enforces double-entry bookkeeping for these flows.
         </p>
+        <p>
+          Taxes reduce private deposits (an asset) and therefore reduce private equity (net worth).
+          On the banking side, tax payments settle by reducing bank reserves, while the Treasury's
+          TGA balance rises at the central bank. In short: taxes pull money out of deposits and
+          reserves and into the TGA; they do not add to reserves.
+        </p>
+        <pre><code>Taxes (amount T):
+Private:      Deposits  -T  (asset)
+Banks:        Deposits  -T  (liability)
+Banks:        Reserves  -T  (asset)
+CentralBank:  Reserves  -T  (liability)
+CentralBank:  TGA       +T  (liability)
+Government:   TGA       +T  (asset)</code></pre>
+        <p>Interpretation by sector:</p>
+        <ul>
+          <li><strong>Central Bank:</strong> reserves (liability) decrease and the TGA (liability) increases by the same amount. Total CB liabilities are unchanged, so CB equity does not change.</li>
+          <li><strong>Treasury/Government:</strong> the TGA asset rises, increasing government net worth (equity). Government liabilities (bonds) are unchanged in this transaction.</li>
+          <li><strong>Banks:</strong> reserves (asset) fall and deposits (liability) fall by the same amount. Bank equity is unchanged.</li>
+          <li><strong>Private sector:</strong> deposits (asset) fall, so private equity decreases.</li>
+        </ul>
         <div class=\"figure\">{figures_html["fiscal_flows"]}</div>
       </section>
 
