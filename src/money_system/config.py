@@ -14,6 +14,7 @@ class ModelConfig:
     tax_rate: float = 0.2
     loan_growth: float = 0.01
     private_loan_growth: float = 0.0
+    cb_bond_purchase: float = 0.0
 
     deposit_rate: float = 0.01 / 12.0
     loan_rate: float = 0.04 / 12.0
@@ -27,6 +28,7 @@ class ModelConfig:
     tax_fn: Callable[[int, Dict[str, float]], float] | None = None
     loan_growth_fn: Callable[[int, Dict[str, float]], float] | None = None
     private_loan_growth_fn: Callable[[int, Dict[str, float]], float] | None = None
+    cb_bond_purchase_fn: Callable[[int, Dict[str, float]], float] | None = None
 
     # Initial balances by sector/account
     initial: Dict[str, Dict[str, float]] = field(default_factory=dict)

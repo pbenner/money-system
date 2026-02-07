@@ -170,6 +170,21 @@ def tx_bond_issue(amount: float) -> Transaction:
     )
 
 
+def tx_bond_sale_to_cb(amount: float) -> Transaction:
+    if amount == 0:
+        return Transaction("bond_sale_to_cb_zero", [])
+    return Transaction(
+        "bond_sale_to_cb",
+        [
+            Posting("Government", "GovBonds", amount),
+            Posting("CentralBank", "GovBonds", amount),
+            Posting("CentralBank", "TGA", amount),
+            Posting("Government", "TGA", amount),
+        ],
+        meta={"amount": amount},
+    )
+
+
 def tx_bank_debt_issue(amount: float) -> Transaction:
     if amount == 0:
         return Transaction("bank_debt_issue_zero", [])

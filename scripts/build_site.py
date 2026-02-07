@@ -286,6 +286,24 @@ Government:   TGA       +T  (asset)</code></pre>
           Credit creation is modeled as net loan change. Bond issuance adjusts the Treasury account toward
           its target level, providing the financing counterpart to deficits.
         </p>
+        <p>
+          The model can also include direct bond sales to the central bank (a simple QE-style operation).
+          In this case the Treasury issues bonds to the central bank and receives an increase in its TGA
+          balance. The central bank adds the bonds to its assets and records a matching TGA liability.
+          This is a swap within the public sector balance sheet and does not, by itself, change private
+          sector net worth.
+        </p>
+        <p>
+          Note: in many real-world jurisdictions, direct primary-market purchases of government bonds
+          by the central bank are restricted or prohibited by law. This model includes the flow as an
+          optional mechanism for exploration and bookkeeping clarity, not as a claim about legal
+          permissibility in any specific country.
+        </p>
+        <pre><code>Bond sale to Central Bank (amount B):
+Government:   GovBonds  +B  (liability)
+Government:   TGA       +B  (asset)
+CentralBank:  GovBonds  +B  (asset)
+CentralBank:  TGA       +B  (liability)</code></pre>
         <div class=\"figure\">{figures_html["credit_bonds"]}</div>
       </section>
 

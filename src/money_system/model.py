@@ -9,6 +9,7 @@ from .config import ModelConfig
 from .flows import (
     select_transactions,
     tx_bond_issue,
+    tx_bond_sale_to_cb,
     tx_government_spending,
     tx_interest_on_bonds,
     tx_interest_on_deposits,
@@ -93,6 +94,11 @@ class MoneySystemModel:
         loans = _get_balance(balances, "Private", "PrivateLoansAsset")
         return self.config.private_loan_growth * loans
 
+    def _resolve_cb_bond_purchase(self, step: int, balances: Dict[str, float]) -> float:
+        if self.config.cb_bond_purchase_fn is not None:
+            return float(self.config.cb_bond_purchase_fn(step, balances))
+        return float(self.config.cb_bond_purchase)
+
     def step(self, step: int) -> Tuple[Dict[str, float], Dict[str, float], Dict[str, float]]:
         balances = self.snapshot()
 
@@ -111,6 +117,7 @@ class MoneySystemModel:
             "interest_on_bonds": self.config.bond_rate * bonds,
         }
         flows["private_loan_change"] = self._resolve_private_loan_change(step, balances)
+        flows["cb_bond_purchase"] = self._resolve_cb_bond_purchase(step, balances)
         flows["taxes"] = self._resolve_tax(step, balances, flows)
 
         txs = []
@@ -139,6 +146,9 @@ class MoneySystemModel:
 
         for tx in select_transactions(txs):
             self.ledger.apply(tx)
+
+        if abs(flows["cb_bond_purchase"]) > 1e-9:
+            self.ledger.apply(tx_bond_sale_to_cb(flows["cb_bond_purchase"]))
 
         tga_balance = _get_balance(self.snapshot(), "Government", "TGA")
         tga_gap = self.config.tga_target - tga_balance
