@@ -100,10 +100,19 @@ def build_page(figures_html: dict[str, str]) -> str:
       <section>
         <h2>Model Structure</h2>
         <p>
-          The model tracks assets, liabilities, and equity for each sector. Transactions are recorded
-          as balanced postings, and each step recomputes sector equity to enforce accounting consistency.
-          Reserves, deposits, loans, and government bonds are the core financial instruments.
+          The model is stock-flow consistent (SFC) and tracks assets, liabilities, and equity for each
+          sector: Private, Banks, Government (Treasury), and Central Bank. The core instruments are
+          deposits, loans, reserves, government bonds, and the Treasury General Account (TGA).
         </p>
+        <p>
+          Each transaction is recorded as a set of postings across sector accounts. The bookkeeping
+          rule is that the weighted sum of postings equals zero, where assets are positive and
+          liabilities and equity are negative. This enforces double-entry accounting across sectors.
+        </p>
+        <pre><code>Transaction balance:  Σ_i s_i · Δx_i = 0
+Account sign:          s_i = +1 (asset), -1 (liability/equity)
+Balance sheet:         Assets - Liabilities - Equity = 0
+Equity residual:       Equity = Assets - Liabilities</code></pre>
       </section>
 
       <section>
@@ -116,12 +125,75 @@ def build_page(figures_html: dict[str, str]) -> str:
       </section>
 
       <section>
+        <h2>Simulation Step (Monthly)</h2>
+        <p>Each monthly step follows the same sequence:</p>
+        <ol>
+          <li>
+            Compute interest flows using current balances:
+            loan interest, deposit interest, reserve interest, and bond interest.
+          </li>
+          <li>
+            Compute policy flows:
+            government spending and taxes (taxes default to a rate on income flows).
+          </li>
+          <li>
+            Compute net loan change:
+            positive values create new loans and deposits; negative values repay loans.
+          </li>
+          <li>
+            Apply transactions in order:
+            loan creation/repayment, interest flows, government spending, and taxes.
+          </li>
+          <li>
+            Adjust government bond issuance to move the TGA toward its target level.
+          </li>
+          <li>
+            Recompute equity as residual and record a snapshot of all balances and metrics.
+          </li>
+        </ol>
+        <pre><code>Example flow identities (monthly):
+Interest on loans    = r_L · Loans
+Interest on deposits = r_D · Deposits
+Interest on reserves = r_R · Reserves
+Interest on bonds    = r_B · GovBonds</code></pre>
+        <pre><code>Default behavior rules:
+Loan change  = g_L · Loans
+Tax base     = G + i_D + i_B - i_L
+Taxes        = max(0, τ · Tax base)
+Bond issue   = TGA_target - TGA</code></pre>
+      </section>
+
+      <section>
         <h2>Bank Reserves</h2>
         <p>
           Reserves are a liability of the central bank and an asset of commercial banks. Fiscal operations
           and interest on reserves shift the reserve balance through the banking system.
         </p>
         <div class=\"figure\">{figures_html["bank_reserves"]}</div>
+      </section>
+
+      <section>
+        <h2>Bookkeeping Mechanics</h2>
+        <p>
+          Each flow is implemented as a balanced transaction. For example, government spending
+          credits private deposits and bank reserves, while debiting the government TGA and the
+          central bank's TGA liability. The transaction is balanced because asset increases are offset
+          by liability changes of equal magnitude.
+        </p>
+        <pre><code>Government spending (amount G):
+Private:      Deposits  +G  (asset)
+Banks:        Deposits  +G  (liability)
+Banks:        Reserves  +G  (asset)
+CentralBank:  Reserves  +G  (liability)
+CentralBank:  TGA       -G  (liability)
+Government:   TGA       -G  (asset)</code></pre>
+        <p>
+          The model also computes a sectoral identity check to verify that the non-government
+          sector's net financial assets equal the negative of the public sector's net position.
+        </p>
+        <pre><code>NonGov NFA = Private_NFA + Banks_NFA
+Public NFP = Government_NFP + CentralBank_NFP
+Identity check: NonGov NFA + Public NFP ≈ 0</code></pre>
       </section>
 
       <section>
