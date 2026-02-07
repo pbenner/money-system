@@ -109,10 +109,22 @@ def build_page(figures_html: dict[str, str]) -> str:
           rule is that the weighted sum of postings equals zero, where assets are positive and
           liabilities and equity are negative. This enforces double-entry accounting across sectors.
         </p>
+        <p>
+          The term “stock-flow consistent” means that every flow has a matching source and use, every
+          stock changes only through recorded flows, and all balance sheets satisfy the same accounting
+          identities at every step. This model explicitly enforces those identities.
+        </p>
         <pre><code>Transaction balance:  Σ_i s_i · Δx_i = 0
 Account sign:          s_i = +1 (asset), -1 (liability/equity)
 Balance sheet:         Assets - Liabilities - Equity = 0
 Equity residual:       Equity = Assets - Liabilities</code></pre>
+        <p>
+          The identity Assets − Liabilities − Equity = 0 must hold because equity is defined as the
+          residual claim on assets after liabilities are subtracted. If a balance sheet violates this
+          identity, the records are inconsistent: either an asset or liability has been misrecorded, or
+          equity is not matching the net position. In this model, equity is recomputed each step as
+          Assets − Liabilities to guarantee consistency.
+        </p>
       </section>
 
       <section>
