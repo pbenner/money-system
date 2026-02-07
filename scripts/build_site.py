@@ -159,6 +159,27 @@ Equity residual:       Equity = Assets - Liabilities</code></pre>
       </section>
 
       <section>
+        <h2>Plain-Language Glossary</h2>
+        <p>
+          This section explains the main terms without assuming any economics background.
+        </p>
+        <ul>
+          <li><strong>Sector</strong>: A group of accounts that move together. Here we use Private, Banks, Government (Treasury), and Central Bank.</li>
+          <li><strong>Asset</strong>: Something a sector owns or is owed. Example: your bank deposit is your asset.</li>
+          <li><strong>Liability</strong>: Something a sector owes. Example: a bank deposit is a bank liability because the bank owes the money to you.</li>
+          <li><strong>Equity (net worth)</strong>: The leftover value after paying liabilities. Equity = Assets − Liabilities.</li>
+          <li><strong>Deposit</strong>: Money in a bank account. It is an asset for the private sector and a liability for banks.</li>
+          <li><strong>Loan</strong>: A debt contract. It is an asset for the lender and a liability for the borrower.</li>
+          <li><strong>Reserves</strong>: The money banks hold at the central bank. It is an asset for banks and a liability for the central bank.</li>
+          <li><strong>Government bond</strong>: A promise by the government to repay later with interest. It is a liability for the government and an asset for whoever holds it.</li>
+          <li><strong>TGA (Treasury General Account)</strong>: The government’s checking account at the central bank. When taxes are paid, the TGA goes up.</li>
+          <li><strong>Money (M1)</strong>: A simple money measure here defined as deposits plus currency.</li>
+          <li><strong>Stock vs flow</strong>: A stock is a level (e.g., deposits). A flow is a change over time (e.g., spending per month).</li>
+          <li><strong>Stock-flow consistent (SFC)</strong>: Every flow is recorded, and all balance sheets always balance.</li>
+        </ul>
+      </section>
+
+      <section>
         <h2>Money and Debt Dynamics</h2>
         <p>
           Money (M1) is defined as private deposits plus currency. Private debt corresponds to bank loans.
