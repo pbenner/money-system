@@ -41,3 +41,5 @@ Then enable GitHub Pages in the repo settings with:
 - Source: `Deploy from a branch`
 - Branch: `main`
 - Folder: `/docs`
+
+The generated site includes a short model explanation with each figure embedded in the text.
