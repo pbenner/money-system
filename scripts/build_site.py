@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import argparse
+import html
+import json
 from pathlib import Path
 
 from money_system.config import ModelConfig
@@ -18,6 +20,20 @@ def parse_args() -> argparse.Namespace:
 def build_page(figures_html: dict[str, str]) -> str:
     params = ModelConfig()
     initial = params.resolve_initial()
+    initial_json = html.escape(json.dumps(initial, indent=2, sort_keys=True))
+    params_dict = {
+        "steps": params.steps,
+        "dt_months": params.dt_months,
+        "gov_spending": params.gov_spending,
+        "tax_rate": params.tax_rate,
+        "loan_growth": params.loan_growth,
+        "deposit_rate": params.deposit_rate,
+        "loan_rate": params.loan_rate,
+        "reserve_rate": params.reserve_rate,
+        "bond_rate": params.bond_rate,
+        "tga_target": params.tga_target,
+    }
+    params_json = html.escape(json.dumps(params_dict, indent=2, sort_keys=True))
     return f"""<!doctype html>
 <html lang=\"en\">
   <head>
@@ -70,6 +86,17 @@ def build_page(figures_html: dict[str, str]) -> str:
       section h2 {{
         margin-top: 0;
         color: var(--accent);
+      }}
+      pre {{
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: #f7f5f1;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #e6e1d7;
+      }}
+      code {{
+        white-space: pre-wrap;
       }}
       .figure {{
         margin-top: 16px;
@@ -252,22 +279,13 @@ Identity check: NonGov NFA + Public NFP ≈ 0</code></pre>
       <section>
         <h2>Initial Conditions</h2>
         <p>The model starts from the following balance sheet levels (defaults):</p>
-        <pre><code>{initial}</code></pre>
+        <pre><code>{initial_json}</code></pre>
       </section>
 
       <section>
         <h2>Model Parameters</h2>
         <p>Default parameter values used for the simulation:</p>
-        <pre><code>steps = {params.steps}
-dt_months = {params.dt_months}
-gov_spending = {params.gov_spending}
-tax_rate = {params.tax_rate}
-loan_growth = {params.loan_growth}
-deposit_rate = {params.deposit_rate}
-loan_rate = {params.loan_rate}
-reserve_rate = {params.reserve_rate}
-bond_rate = {params.bond_rate}
-tga_target = {params.tga_target}</code></pre>
+        <pre><code>{params_json}</code></pre>
       </section>
     </main>
     <footer>
