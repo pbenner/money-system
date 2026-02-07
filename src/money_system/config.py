@@ -34,7 +34,7 @@ class ModelConfig:
             return self.initial
         return {
             "Private": {
-                "Deposits": 1000.0,
+                "Deposits": 1200.0,
                 "Loans": 800.0,
                 "GovBonds": 500.0,
                 "Currency": 0.0,
@@ -42,20 +42,20 @@ class ModelConfig:
             },
             "Banks": {
                 "Loans": 800.0,
-                "Reserves": 200.0,
-                "Deposits": 1000.0,
+                "Reserves": 400.0,
+                "Deposits": 1200.0,
                 "BankEquity": 0.0,
             },
             "Government": {
                 "TGA": 0.0,
-                "GovBonds": 500.0,
+                "GovBonds": 900.0,
                 "GovEquity": 0.0,
             },
             "CentralBank": {
-                "Reserves": 200.0,
+                "Reserves": 400.0,
                 "Currency": 0.0,
                 "TGA": 0.0,
-                "GovBonds": 0.0,
+                "GovBonds": 400.0,
                 "CBEq": 0.0,
             },
         }
